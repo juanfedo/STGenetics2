@@ -16,7 +16,7 @@ namespace Application.Validations
                                        .Where(g => g.Count() > 1)
                                        .ToList();
 
-                if (duplicateItems != null && duplicateItems.Any())
+                if (duplicateItems != null && duplicateItems.Count != 0)
                 {
                     return new ValidationResult("It's not allowed to duplicate items in the Order");
                 }

@@ -1,5 +1,6 @@
 ﻿using Application.DTO;
 using Application.Utilities;
+using Application.Validations;
 using AutoMapper;
 using Domain.Models;
 using Infrastructure.Repositories;
@@ -12,13 +13,15 @@ namespace Application.Services
         readonly IOrderItemsRepository _orderItemsRepository;
         readonly IMapper _mapper;
         readonly IOrderDiscount _orderDiscount;
+        readonly IValidateOrder _validateOrder;
 
-        public OrderService(IOrderRepository orderRepository, IOrderItemsRepository orderItemsRepository, IMapper mapper, IOrderDiscount orderDiscount)
+        public OrderService(IOrderRepository orderRepository, IOrderItemsRepository orderItemsRepository, IMapper mapper, IOrderDiscount orderDiscount, IValidateOrder validateSandwichCountOrder)
         {
             _orderRepository = orderRepository;
             _orderItemsRepository = orderItemsRepository;
             _mapper = mapper;
             _orderDiscount = orderDiscount;
+            _validateOrder = validateSandwichCountOrder;
         }
 
         public async Task<List<OrderGetDTO>> GetAllOrdersAsync(CancellationToken cancellationToken)
@@ -83,8 +86,9 @@ namespace Application.Services
 
         private async Task<float> GetPriceByOrder(string foodIds, CancellationToken cancellationToken)
         {
-            var result = await _orderItemsRepository.GetPriceByOrderAsync(foodIds, cancellationToken);
-            var price = _orderDiscount.CalculateDiscount(result);
+            var orderItems = await _orderItemsRepository.GetOrderItemsByIdsAsync(foodIds, cancellationToken);
+            _validateOrder.ValidateSandwichCountInOrder(orderItems);
+            var price = _orderDiscount.CalculateDiscount(orderItems);
             return (float)Math.Round(price, 2);
         }
     }

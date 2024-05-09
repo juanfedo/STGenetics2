@@ -57,7 +57,7 @@ namespace Infrastructure.Repositories
             return Convert.ToInt32(result);
         }
 
-        public async Task<List<Food>> GetPriceByOrderAsync(string foodIds, CancellationToken cancellationToken)
+        public async Task<List<Food>> GetOrderItemsByIdsAsync(string foodIds, CancellationToken cancellationToken)
         {
             using SqlConnection con = new(_connectionString);
             var result = await con.QueryAsync<Food>(new CommandDefinition("" +

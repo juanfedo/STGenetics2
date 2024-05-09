@@ -1,5 +1,6 @@
 using Application.Services;
 using Application.Utilities;
+using Application.Validations;
 using Infrastructure.Entities;
 using Infrastructure.Repositories;
 
@@ -25,7 +26,7 @@ namespace STGenetics2
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IFoodService, FoodService>();
             builder.Services.AddScoped<IFoodRepository, FoodRepository>();
-
+            builder.Services.AddScoped<IValidateOrder, ValidateOrder>();
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             builder.Services.AddScoped<IOrderItemsRepository, OrderItemsRepository>();
